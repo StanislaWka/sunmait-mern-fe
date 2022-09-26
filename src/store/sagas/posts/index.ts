@@ -4,9 +4,11 @@ import {
   getAllPostsRequest,
   getOnePostRequest,
 } from 'api/agents/postService';
+import { AxiosError } from 'axios';
 import { call, put, takeEvery } from 'redux-saga/effects';
 import { PostState } from 'store/reducers/postReducer';
 import { POST_TYPES } from 'store/reducers/postReducer/typesOfActions';
+import { snackActions } from 'utils';
 
 import { selectState } from '../selector';
 
@@ -20,7 +22,7 @@ function* getAllPosts() {
     });
   } catch (e) {
     console.error(e);
-    throw e;
+    snackActions.error((e as AxiosError).message);
   }
 }
 
@@ -37,7 +39,7 @@ function* getOnePost() {
     });
   } catch (e) {
     console.error(e);
-    throw e;
+    snackActions.error((e as AxiosError).message);
   }
 }
 
@@ -55,7 +57,7 @@ function* deletePost() {
     });
   } catch (e) {
     console.error(e);
-    throw e;
+    snackActions.error((e as AxiosError).message);
   }
 }
 
@@ -81,7 +83,7 @@ function* createPost() {
     });
   } catch (e) {
     console.error(e);
-    throw e;
+    snackActions.error((e as AxiosError).message);
   }
 }
 
