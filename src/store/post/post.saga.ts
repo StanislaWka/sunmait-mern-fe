@@ -6,8 +6,8 @@ import {
 } from 'api/agents/postService';
 import { AxiosError } from 'axios';
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { PostState } from 'store/reducers/postReducer';
-import { POST_TYPES } from 'store/reducers/postReducer/typesOfActions';
+import { PostState } from 'store/post/post.reducer';
+import { POST_TYPES } from 'store/post/typesOfActions';
 import { snackActions } from 'utils';
 
 import { selectState } from '../selector';

@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { UserState } from 'store/reducers/userReducer';
-import { TYPES } from 'store/reducers/userReducer/typesOfAction';
+import { UserReducer } from 'store/user/user.reducer';
+import { TYPES } from 'store/user/typesOfAction';
 import { requestLoginUser, requestRegisterUser } from 'api/agents';
 import { snackActions } from 'utils';
 import { AxiosError } from 'axios';
@@ -8,10 +8,10 @@ import { selectState } from '../selector';
 
 export function* registrationUser() {
   try {
-    const state: UserState = yield selectState((s) => s.userReducer);
+    const state: UserReducer = yield selectState((s) => s.userReducer);
     const { email, password, name, surname } = state;
 
-    const result: { data: UserState } = yield call(requestRegisterUser, {
+    const result: { data: UserReducer } = yield call(requestRegisterUser, {
       email,
       password,
       name,
@@ -36,10 +36,10 @@ export function* registrationUser() {
 
 export function* loginUser() {
   try {
-    const state: UserState = yield selectState((s) => s.userReducer);
+    const state: UserReducer = yield selectState((s) => s.userReducer);
     const { email, password } = state;
 
-    const result: { data: UserState } = yield call(requestLoginUser, { email, password });
+    const result: { data: UserReducer } = yield call(requestLoginUser, { email, password });
 
     localStorage.setItem('accessToken', result.data.tokenData.accessToken);
 

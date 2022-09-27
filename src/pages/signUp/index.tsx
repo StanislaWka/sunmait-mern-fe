@@ -5,12 +5,11 @@ import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, IconButton, InputAdornment, Typography } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { userRegistration } from 'store/reducers/userReducer/actions';
+import { userRegistration } from 'store/user/user.actions';
 
 import { CustomButton, Input } from 'components';
 import { APP_ROUTES } from 'constants/';
 import { useAppDispatch, useEnhancedNavigate } from 'hooks';
-import { snackActions } from 'utils';
 import { validationSchema } from 'validators/signup';
 import styles from './styles';
 
@@ -56,7 +55,6 @@ export function SignUpPage(props: SignUpLayoutProps) {
     dispatch(userRegistration(requestData));
     const from = (location.state as NavigateState)?.from.pathname || APP_ROUTES.SIGN_IN;
     scrollNavigate({ top: 0, left: 0, path: from, replace: true });
-    snackActions.info('You have been registered. U can enter to the system.');
   };
 
   return (

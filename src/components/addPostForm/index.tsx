@@ -8,7 +8,7 @@ import { Input } from 'components/input';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import React from 'react';
 import { FieldValue, FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { createPost } from 'store/reducers/postReducer/actions';
+import { createPostAction } from 'store/post/post.actions';
 import { validationSchema } from 'validators/createPost';
 import { string } from 'yup';
 import styles from './styles';
@@ -41,7 +41,7 @@ export function CreatePost({ setCreatePostForm }: Props) {
   } = useForm(formOptions);
 
   const handleCreatePost: SubmitHandler<FieldValues> = async (formData): Promise<void> => {
-    dispatch(createPost(formData.title, formData.text));
+    dispatch(createPostAction(formData.title, formData.text));
     setCreatePostForm(false);
   };
 

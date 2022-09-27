@@ -3,9 +3,9 @@
 import { all, takeEvery, spawn } from '@redux-saga/core/effects';
 import axios from 'axios';
 import { API_V1_ROUTE } from 'constants/apiRoutes';
-import { userLogin } from '../reducers/userReducer/actions';
-import postSaga from './posts';
-import userSaga from './users';
+import { userLogin } from './user/user.actions';
+import postSaga from './post/post.saga';
+import userSaga from './user/user.saga';
 
 interface UserLoginData {
   email: string;

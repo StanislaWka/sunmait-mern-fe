@@ -2,8 +2,8 @@
 import { Box, IconButton, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import React, { useState } from 'react';
-import { UserState } from 'store/reducers/userReducer';
-import { deletePost, getOnePost } from 'store/reducers/postReducer/actions';
+import { UserState } from 'store/user/user.reducer';
+import { deletePostAction, getOnePostAction } from 'store/post/post.actions';
 import { CustomButton } from 'components/button';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import styles from './styles';
@@ -23,14 +23,15 @@ export function Post({ _id, title, text, count, user, tags }: Props) {
   const dispatch = useAppDispatch();
   // eslint-disable-next-line no-underscore-dangle
   const userId = useAppSelector((state) => state.userReducer._id);
+
   const [openModal, setOpenModal] = useState(false);
 
   const handleDeletePost = () => {
-    dispatch(deletePost(_id));
+    dispatch(deletePostAction(_id));
   };
 
   const handleOpenPost = () => {
-    dispatch(getOnePost(_id));
+    dispatch(getOnePostAction(_id));
     setOpenModal(true);
   };
 

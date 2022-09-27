@@ -1,4 +1,4 @@
-import { UserState } from '../userReducer';
+import { UserReducer } from '../user/user.reducer';
 import { POST_TYPES } from './typesOfActions';
 
 export interface PostState {
@@ -8,7 +8,7 @@ export interface PostState {
   tags: string[];
   viewsCount: number;
   imageUrl: string;
-  user: Partial<UserState>;
+  user: Partial<UserReducer>;
 }
 
 interface PostReducerState {
@@ -20,7 +20,7 @@ interface PostReducerState {
 
 interface ActionPayload {
   type: string;
-  payload: Partial<{
+  payload?: Partial<{
     deleteId: string;
     posts: PostState[];
     currentPost: Partial<PostState>;

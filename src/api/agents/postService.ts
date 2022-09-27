@@ -3,7 +3,7 @@ import { PostPatchData, MessageResponse } from 'api/models/posts';
 import { UserCredentialData } from 'api/models/users';
 import { AxiosPromise } from 'axios';
 import { POSTS_API_ROUTES } from 'constants/apiRoutes';
-import { PostState } from 'store/reducers/postReducer';
+import { PostState } from 'store/post/post.reducer';
 import axios from '../../axiosDefault';
 
 // @ts-ignore

@@ -11,7 +11,7 @@ import { useLocation } from 'react-router';
 
 import { Input } from 'components';
 import { APP_ROUTES } from 'constants/';
-import { userLogin } from 'store/reducers/userReducer/actions';
+import { userLogin } from 'store/user/user.actions';
 import { validationSchema } from 'validators/signIn';
 
 import styles from './styles';

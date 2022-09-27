@@ -8,7 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import { useAppDispatch, useAppSelector } from 'hooks';
-import { POST_TYPES } from 'store/reducers/postReducer/typesOfActions';
+import { POST_TYPES } from 'store/post/typesOfActions';
 
 interface Props {
   open: boolean;
