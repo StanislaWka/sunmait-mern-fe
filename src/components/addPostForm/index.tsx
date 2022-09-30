@@ -5,13 +5,16 @@ import { LoadingButton } from '@mui/lab';
 import { Box, Container, Divider } from '@mui/material';
 import { CustomButton } from 'components/button';
 import { Input } from 'components/input';
-import { useAppDispatch, useAppSelector } from 'hooks';
+import { useAppDispatch } from 'hooks';
 import React from 'react';
 import { FieldValue, FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { useSelector } from 'react-redux';
 import { createPostAction } from 'store/post/post.actions';
+import { selectUserId } from 'store/user/user.selectors';
 import { validationSchema } from 'validators/createPost';
 import { string } from 'yup';
 import styles from './styles';
+import TagSelect from './tagSelect';
 
 interface Props {
   setCreatePostForm: (prop: boolean) => void;
@@ -23,7 +26,8 @@ interface AddPostFields {
 }
 
 export function CreatePost({ setCreatePostForm }: Props) {
-  const { _id } = useAppSelector((state) => state.userReducer);
+  const _id = useSelector(selectUserId);
+  const [tagName, setTagName] = React.useState<{ id: string; name: string }[]>([]);
   const dispatch = useAppDispatch();
   const formOptions = {
     defaultValues: {
@@ -41,7 +45,8 @@ export function CreatePost({ setCreatePostForm }: Props) {
   } = useForm(formOptions);
 
   const handleCreatePost: SubmitHandler<FieldValues> = async (formData): Promise<void> => {
-    dispatch(createPostAction(formData.title, formData.text));
+    const tagsId = tagName.map((tag) => tag.id);
+    dispatch(createPostAction(formData.title, formData.text, tagsId));
     setCreatePostForm(false);
   };
 
@@ -70,6 +75,7 @@ export function CreatePost({ setCreatePostForm }: Props) {
             variant="outlined"
             register={register}
           />
+          <TagSelect tagName={tagName} setTagName={setTagName} />
         </Box>
         <Box
           sx={{

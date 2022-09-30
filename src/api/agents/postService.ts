@@ -6,9 +6,23 @@ import { POSTS_API_ROUTES } from 'constants/apiRoutes';
 import { PostState } from 'store/post/post.reducer';
 import axios from '../../axiosDefault';
 
-// @ts-ignore
-export async function getAllPostsRequest(): AxiosPromise<PostState[]> {
-  return axios.get(POSTS_API_ROUTES.MAIN_ROUTE);
+export async function getAllPostsRequest(
+  limit: number,
+  page: number,
+  filter?: string,
+  order?: string,
+  tagsId?: string,
+  // @ts-ignore
+): AxiosPromise<PostState[]> {
+  return axios.get(POSTS_API_ROUTES.MAIN_GET_ROUTE(limit, page, filter, order, tagsId));
+}
+
+export async function getUserPostsRequest(
+  limit: number,
+  page: number,
+  // @ts-ignore
+): AxiosPromise<PostState[]> {
+  return axios.get(POSTS_API_ROUTES.GET_USER_POSTS_ID(limit, page));
 }
 
 export async function getOnePostRequest(id: string) {

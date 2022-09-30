@@ -5,9 +5,10 @@ import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, IconButton, InputAdornment, Typography } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { userRegistration } from 'store/user/user.actions';
+import { userRegistrationAction } from 'store/user/user.actions';
 
 import { CustomButton, Input } from 'components';
+import { UserReducer } from 'store/user/user.reducer';
 import { APP_ROUTES } from 'constants/';
 import { useAppDispatch, useEnhancedNavigate } from 'hooks';
 import { validationSchema } from 'validators/signup';
@@ -52,7 +53,11 @@ export function SignUpPage(props: SignUpLayoutProps) {
   const onSubmit: SubmitHandler<FieldValues> = async (formData): Promise<void> => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { confirmPassword, ...requestData } = formData;
-    dispatch(userRegistration(requestData));
+    dispatch(
+      userRegistrationAction(
+        requestData as Omit<UserReducer, '_id' | 'loading' | 'isAuth' | 'tokenData'>,
+      ),
+    );
     const from = (location.state as NavigateState)?.from.pathname || APP_ROUTES.SIGN_IN;
     scrollNavigate({ top: 0, left: 0, path: from, replace: true });
   };

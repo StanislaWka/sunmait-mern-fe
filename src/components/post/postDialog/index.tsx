@@ -7,8 +7,10 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-import { useAppDispatch, useAppSelector } from 'hooks';
-import { POST_TYPES } from 'store/post/typesOfActions';
+import { useAppDispatch } from 'hooks';
+import POST_TYPES from 'store/post/post.types';
+import { useSelector } from 'react-redux';
+import { selectCurrentPost } from 'store/post/post.selectors';
 
 interface Props {
   open: boolean;
@@ -31,7 +33,7 @@ export default function AlertDialogSlide({ open, setOpen }: Props) {
     setOpen(false);
   };
 
-  const currentPost = useAppSelector((state) => state.postReducer.currentPost);
+  const currentPost = useSelector(selectCurrentPost);
 
   return (
     <div>

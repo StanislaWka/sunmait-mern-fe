@@ -1,71 +1,82 @@
-import { Container } from '@mui/material';
-import { PostSkeleton } from 'components';
+import React, { useEffect, useState } from 'react';
+import { Box, Container, TextField } from '@mui/material';
 import { CreatePost } from 'components/addPostForm';
 import { Header } from 'components/header';
-import { Post } from 'components/post';
-import { APP_ROUTES } from 'constants/';
-import { useAppDispatch, useAppSelector, useEnhancedNavigate } from 'hooks';
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router';
-import { getAllPostsAction } from 'store/post/post.actions';
-import { TYPES } from 'store/user/typesOfAction';
+import { useAppDispatch } from 'hooks';
+import { useSelector } from 'react-redux';
+import { getAllPostsAction, setTagsIdAction } from 'store/post/post.actions';
+import { selectPosts } from 'store/post/post.selectors';
+import { getAllTagsAction, setNewTagNameAction } from 'store/tag/tag.actions';
+import { setUserIdAction } from 'store/user/user.actions';
+import { selectUserId } from 'store/user/user.selectors';
 import { getUserId } from 'utils';
-
-type NavigateState = {
-  from: Location;
-};
+import { SearchFilter } from './searchFilter';
+import { CustomPagination } from './customPagination';
+import { Posts } from './posts';
+import { Tags } from './tags';
 
 export function MainPage() {
   const dispatch = useAppDispatch();
-  const { scrollNavigate } = useEnhancedNavigate();
-  const { _id: userId, isAuth } = useAppSelector((state) => state.userReducer);
+  const userId = useSelector(selectUserId);
   const [createPostFrom, setCreatePostForm] = useState(false);
-  const location = useLocation();
+  const [newTag, setNewTag] = useState('');
 
-  useEffect(() => {
-    if (!isAuth) {
-      const from = (location.state as NavigateState)?.from.pathname || APP_ROUTES.SIGN_IN;
-      // eslint-disable-next-line no-use-before-define
-      scrollNavigate({ top: 0, left: 0, path: from, replace: true });
-    }
-  }, [isAuth]);
+  const [tagsId, setTagsId] = useState<string[]>([]);
 
   useEffect(() => {
     dispatch(getAllPostsAction());
+    dispatch(getAllTagsAction());
   }, []);
 
-  let posts = useAppSelector((state) => state.postReducer.posts);
+  let posts = useSelector(selectPosts);
   posts = posts.filter((post) => post?.user);
 
   if (!userId) {
     const userData = getUserId();
-    if (userData) {
-      dispatch({ type: TYPES.SET_CREDENTIALS, payload: { ...userData, isAuth: true } });
+    if (userData && userData._id) {
+      dispatch(setUserIdAction(userData._id));
     }
   }
+
+  const handleTagChange = (e: any) => {
+    setNewTag(e.target.value);
+  };
+
+  const handleOnBlur = (e: any) => {
+    e.target.value = '';
+    if (newTag) {
+      dispatch(setNewTagNameAction(newTag));
+      setNewTag('');
+    }
+  };
+
+  useEffect(() => {
+    dispatch(setTagsIdAction(tagsId));
+  }, [tagsId]);
 
   return (
     <Container maxWidth="lg">
       <Header setCreatePostForm={setCreatePostForm} />
       {createPostFrom && <CreatePost setCreatePostForm={setCreatePostForm} />}
       <h1> Welcome to MainPage</h1>
-      {posts.length ? (
-        posts.map((post) => (
-          <Post
-            // eslint-disable-next-line no-underscore-dangle
-            key={post!._id}
-            // eslint-disable-next-line no-underscore-dangle
-            _id={post!._id}
-            title={post!.title}
-            text={post!.text}
-            user={post!.user}
-            tags={post!.tags}
-            count={post!.viewsCount}
-          />
-        ))
-      ) : (
-        <PostSkeleton />
-      )}
+      <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+        <Box sx={{ width: '40%' }}>
+          <Box sx={{ marginBottom: '35px', display: 'flex', justifyContent: 'space-between' }}>
+            <TextField
+              variant="standard"
+              placeholder="Enter new tag"
+              label="Create new TAG"
+              sx={{ margin: 'auto' }}
+              onChange={handleTagChange}
+              onBlur={handleOnBlur}
+            />
+          </Box>
+          <Tags tagsId={tagsId} setTagsId={setTagsId} />
+        </Box>
+        <SearchFilter />
+      </Box>
+      <Posts posts={posts} />
+      <CustomPagination />
     </Container>
   );
 }

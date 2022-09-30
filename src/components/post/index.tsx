@@ -2,10 +2,13 @@
 import { Box, IconButton, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import React, { useState } from 'react';
-import { UserState } from 'store/user/user.reducer';
-import { deletePostAction, getOnePostAction } from 'store/post/post.actions';
+import { UserReducer } from 'store/user/user.reducer';
+import { setDeleteIdPostAction, getOnePostAction } from 'store/post/post.actions';
+import { Tag } from 'components';
 import { CustomButton } from 'components/button';
-import { useAppDispatch, useAppSelector } from 'hooks';
+import { useAppDispatch } from 'hooks';
+import { useSelector } from 'react-redux';
+import { selectUserId } from 'store/user/user.selectors';
 import styles from './styles';
 import AlertDialogSlide from './postDialog';
 
@@ -14,20 +17,20 @@ interface Props {
   title: string;
   text: string;
   count: number;
-  user: Partial<UserState>;
-  tags: string[];
+  user: Partial<UserReducer>;
+  tags: { _id: string; name: string; color: string }[];
 }
 
 export function Post({ _id, title, text, count, user, tags }: Props) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const dispatch = useAppDispatch();
   // eslint-disable-next-line no-underscore-dangle
-  const userId = useAppSelector((state) => state.userReducer._id);
+  const userId = useSelector(selectUserId);
 
   const [openModal, setOpenModal] = useState(false);
 
   const handleDeletePost = () => {
-    dispatch(deletePostAction(_id));
+    dispatch(setDeleteIdPostAction(_id));
   };
 
   const handleOpenPost = () => {
@@ -55,11 +58,12 @@ export function Post({ _id, title, text, count, user, tags }: Props) {
           </IconButton>
         )}
       </Box>
-      <ul>
-        {tags.map((tag) => (
-          <li>{tag}</li>
-        ))}
-      </ul>
+      <Box sx={{ marginBottom: '15px', marginTop: '20px', display: 'flex' }}>
+        {!!tags.length &&
+          tags.map((tag) => (
+            <Tag name={tag.name} color={tag.color} _id={tag._id} idCompare={idCompare} />
+          ))}
+      </Box>
       <Box>
         <Box>Views {count}</Box>
         <Box>

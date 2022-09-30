@@ -1,71 +1,98 @@
+import { AxiosError } from 'axios';
+import { RootActions } from 'store/actions';
+import { TagData } from 'store/tag/tag.reducer';
+import { createReducer } from 'typesafe-actions';
 import { UserReducer } from '../user/user.reducer';
-import { POST_TYPES } from './typesOfActions';
+import * as ACTIONS from './post.actions';
+
+const LIMIT = 5;
+const FIRST_PAGE = 1;
 
 export interface PostState {
   _id: string;
   title: string;
   text: string;
-  tags: string[];
+  tags: TagData[];
   viewsCount: number;
   imageUrl: string;
   user: Partial<UserReducer>;
 }
 
-interface PostReducerState {
+export interface CurrentPostData extends Omit<PostState, 'tags'> {
+  tags: string[];
+}
+
+export interface Filter {
+  type: string;
+  value: string;
+}
+
+interface PostReducer {
   deleteId: string;
   posts: PostState[];
-  currentPost: Partial<PostState>;
+  currentPost: Partial<CurrentPostData>;
   loading: boolean;
+  error?: AxiosError;
+  count: number;
+  limit: number;
+  page: number;
+  deleteTagId?: string;
+  userId?: string;
+  filter?: string;
+  order?: string;
+  tagsId?: string[];
 }
 
-interface ActionPayload {
-  type: string;
-  payload?: Partial<{
-    deleteId: string;
-    posts: PostState[];
-    currentPost: Partial<PostState>;
-    loading: boolean;
-  }>;
-}
-
-const initialState: PostReducerState = {
+const initialState: PostReducer = {
   deleteId: '',
   posts: [],
   currentPost: {},
   loading: false,
+  error: undefined,
+  limit: LIMIT,
+  page: FIRST_PAGE,
+  count: 0,
+  tagsId: [],
 };
 
-// eslint-disable-next-line default-param-last
-export const postReducer = (state = initialState, action: ActionPayload) => {
-  switch (action?.type) {
-    case POST_TYPES.SET_ALL: {
-      return { ...state, ...action.payload };
+export const postReducer = createReducer<PostReducer, RootActions>(initialState)
+  .handleAction(ACTIONS.getAllPostsAction, (state) => state)
+  .handleAction(ACTIONS.getOnePostAction, (state, { payload }) => ({ ...state, ...payload }))
+  .handleAction(ACTIONS.setDeleteIdPostAction, (state, { payload }) => ({
+    ...state,
+    ...payload,
+    posts: state.posts.filter((post) => post._id !== payload.deleteId),
+  }))
+  .handleAction(ACTIONS.createPostAction, (state, { payload }) => ({ ...state, ...payload }))
+  .handleAction(ACTIONS.setCurrentPostAction, (state, { payload }) => ({ ...state, ...payload }))
+  .handleAction(ACTIONS.setAllAction, (state, { payload }) => ({ ...state, posts: payload }))
+  .handleAction(ACTIONS.setLoadingAction, (state) => ({ ...state, loading: true }))
+  .handleAction(ACTIONS.setLoadingFailureAction, (state, { payload }) => ({
+    ...state,
+    ...payload,
+    loading: false,
+  }))
+  .handleAction(ACTIONS.setLoadingSuccessAction, (state) => ({ ...state, loading: false }))
+  .handleAction(ACTIONS.clearCurrentPostACtion, (state) => ({ ...state, currentPost: {} }))
+  .handleAction(ACTIONS.setNewPostAction, (state, { payload }) => {
+    if (state.posts.length === state.limit) {
+      state.posts.splice(state.limit - 1, 1);
     }
-    case POST_TYPES.SET_LOADING: {
-      return { ...state, loading: true };
-    }
-    case POST_TYPES.SET_LOADING_SUCCESS: {
-      return { ...state, loading: false };
-    }
-    case POST_TYPES.SET_LOADING_FAILURE: {
-      return { ...state, loading: false };
-    }
-    case POST_TYPES.DELETE: {
-      return { ...state, ...action.payload };
-    }
-    case POST_TYPES.CREATE: {
-      return { ...state, ...action.payload };
-    }
-    case POST_TYPES.SET_ONE: {
-      return { ...state, ...action.payload };
-    }
-    case POST_TYPES.GET_ONE: {
-      return { ...state, ...action.payload };
-    }
-    case POST_TYPES.CLEAR_CURRENT: {
-      return { ...state, ...action.payload };
-    }
-    default:
-      return state;
-  }
-};
+    return {
+      ...state,
+      posts: [payload, ...state.posts],
+    };
+  })
+  .handleAction(ACTIONS.setCountAction, (state, { payload }) => ({ ...state, count: payload }))
+  .handleAction(ACTIONS.setPageAction, (state, { payload }) => ({ ...state, page: payload }))
+  .handleAction(ACTIONS.deleteTagAction, (state, { payload }) => ({
+    ...state,
+    deleteTagId: payload,
+  }))
+  .handleAction(ACTIONS.setUserPostsAction, (state, { payload }) => ({
+    ...state,
+    userId: payload,
+  }))
+  .handleAction(ACTIONS.setFilterAction, (state, { payload }) => ({ ...state, filter: payload }))
+  .handleAction(ACTIONS.setOrderAction, (state, { payload }) => ({ ...state, order: payload }))
+  .handleAction(ACTIONS.setTagsIdAction, (state, { payload }) => ({ ...state, tagsId: payload }));

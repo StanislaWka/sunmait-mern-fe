@@ -1,10 +1,16 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
 import { UserReducer } from 'store/user/user.reducer';
-import { TYPES } from 'store/user/typesOfAction';
+import TYPES from 'store/user/user.types';
 import { requestLoginUser, requestRegisterUser } from 'api/agents';
 import { snackActions } from 'utils';
+import { setLoadingAction } from 'store/post/post.actions';
 import { AxiosError } from 'axios';
 import { selectState } from '../selector';
+import {
+  setUserCredentialsAction,
+  setUserFailureAction,
+  setUserSuccessAction,
+} from './user.actions';
 
 export function* registrationUser() {
   try {
@@ -18,18 +24,12 @@ export function* registrationUser() {
       surname,
     });
 
-    yield put({
-      type: TYPES.SET_CREDENTIALS,
-      payload: result.data,
-    });
+    yield put(setUserCredentialsAction(result.data));
 
-    yield put({
-      type: TYPES.SET_LOADING,
-      payload: {},
-    });
+    yield put(setLoadingAction());
   } catch (e) {
     console.error(e);
-    yield put({ type: TYPES.SET_USER_FAILURE });
+    yield put(setUserFailureAction());
     snackActions.error((e as AxiosError).message);
   }
 }
@@ -43,18 +43,12 @@ export function* loginUser() {
 
     localStorage.setItem('accessToken', result.data.tokenData.accessToken);
 
-    yield put({
-      type: TYPES.SET_CREDENTIALS,
-      payload: result.data,
-    });
+    yield put(setUserCredentialsAction(result.data));
 
-    yield put({
-      type: TYPES.SET_USER_SUCCESS,
-      payload: {},
-    });
+    yield put(setUserSuccessAction());
   } catch (e) {
     console.error(e);
-    yield put({ type: TYPES.SET_USER_FAILURE });
+    yield put(setUserFailureAction());
     snackActions.error((e as AxiosError).message);
   }
 }

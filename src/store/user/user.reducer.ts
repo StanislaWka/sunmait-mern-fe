@@ -1,7 +1,6 @@
 import { createReducer } from 'typesafe-actions';
 import { RootActions } from '../actions';
-import { userLoginAction, userRegistrationAction, clearStateAction } from './user.actions';
-// import { TYPES } from './typesOfAction';
+import * as ACTIONS from './user.actions';
 
 export interface UserReducer {
   _id: string;
@@ -26,35 +25,22 @@ const initialState: UserReducer = {
 };
 
 export const userReducer = createReducer<UserReducer, RootActions>(initialState)
-  .handleAction(clearStateAction, (state) => initialState)
-  .handleAction(userLoginAction, (state, { payload }) => ({ ...state }))
-  .handleAction(userRegistrationAction, (state, { payload }) => ({ ...state, ...payload }));
-
-// // eslint-disable-next-line default-param-last
-// export const userReducer = (state = initialState, action: ActionPayload) => {
-//   switch (action?.type) {
-//     case TYPES.LOGIN: {
-//       return { ...state, ...action.payload };
-//     }
-//     case TYPES.SET_CREDENTIALS: {
-//       return { ...state, ...action.payload };
-//     }
-//     case TYPES.SET_REGISTRATION_CREDENTIALS: {
-//       return { ...state, ...action.payload };
-//     }
-//     case TYPES.SET_LOADING: {
-//       return { ...state, loading: true };
-//     }
-//     case TYPES.SET_USER_FAILURE: {
-//       return { ...state, loading: false, isAuth: false };
-//     }
-//     case TYPES.SET_USER_SUCCESS: {
-//       return { ...state, loading: false, isAuth: true };
-//     }
-//     case TYPES.CLEAR_STATE: {
-//       return initialState;
-//     }
-//     default:
-//       return state;
-//   }
-// };
+  .handleAction(ACTIONS.clearStateAction, (state) => initialState)
+  .handleAction(ACTIONS.userLoginAction, (state, { payload }) => ({ ...state, ...payload }))
+  .handleAction(ACTIONS.userRegistrationAction, (state, { payload }) => ({ ...state, ...payload }))
+  .handleAction(ACTIONS.setUserCredentialsAction, (state, { payload }) => ({
+    ...state,
+    ...payload,
+  }))
+  .handleAction(ACTIONS.setLoadingAction, (state) => ({ ...state, loading: true }))
+  .handleAction(ACTIONS.setUserFailureAction, (state) => ({
+    ...state,
+    loading: false,
+    isAuth: false,
+  }))
+  .handleAction(ACTIONS.setUserSuccessAction, (state) => ({
+    ...state,
+    loading: false,
+    isAuth: true,
+  }))
+  .handleAction(ACTIONS.setUserIdAction, (state, { payload }) => ({ ...state, _id: payload }));
