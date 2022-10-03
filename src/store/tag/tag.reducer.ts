@@ -22,10 +22,6 @@ const initialState: TagReducer = {
 
 export const tagReducer = createReducer<TagReducer, RootActions>(initialState)
   .handleAction(ACTIONS.setAllTagsAction, (state, { payload }) => ({ ...state, tags: payload }))
-  .handleAction(ACTIONS.setNewTagNameAction, (state, { payload }) => ({
-    ...state,
-    newTagName: payload,
-  }))
   .handleAction(ACTIONS.addNewTagAction, (state, { payload }) => ({
     ...state,
     tags: [...state.tags, payload],

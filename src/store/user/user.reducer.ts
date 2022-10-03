@@ -26,8 +26,6 @@ const initialState: UserReducer = {
 
 export const userReducer = createReducer<UserReducer, RootActions>(initialState)
   .handleAction(ACTIONS.clearStateAction, (state) => initialState)
-  .handleAction(ACTIONS.userLoginAction, (state, { payload }) => ({ ...state, ...payload }))
-  .handleAction(ACTIONS.userRegistrationAction, (state, { payload }) => ({ ...state, ...payload }))
   .handleAction(ACTIONS.setUserCredentialsAction, (state, { payload }) => ({
     ...state,
     ...payload,

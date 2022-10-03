@@ -2,11 +2,16 @@ import { createNewTagRequest, deleteTagRequest, getAllTagsRequest } from 'api/ag
 import { AxiosError } from 'axios';
 import { call, put, takeEvery } from 'redux-saga/effects';
 import { deleteTagFromPostsAction } from 'store/post/post.actions';
-import { selectState } from 'store/selector';
+import { ActionType } from 'typesafe-actions';
 import { snackActions } from 'utils';
-import { addNewTagAction, setAllTagsAction } from './tag.actions';
+import {
+  addNewTagAction,
+  getAllTagsAction,
+  setAllTagsAction,
+  setDeleteIdTagAction,
+  setNewTagNameAction,
+} from './tag.actions';
 import { TagData } from './tag.reducer';
-import TAG_TYPES from './tag.types';
 
 function* getAllTags() {
   try {
@@ -19,11 +24,9 @@ function* getAllTags() {
   }
 }
 
-function* createNewTag() {
+function* createNewTag({ payload }: ActionType<typeof setNewTagNameAction>) {
   try {
-    const newTagName: string = yield selectState((s) => s.tagReducer.newTagName);
-
-    const newTag: { data: TagData } = yield call(() => createNewTagRequest(newTagName));
+    const newTag: { data: TagData } = yield call(() => createNewTagRequest(payload));
 
     yield put(addNewTagAction(newTag.data));
   } catch (e) {
@@ -32,12 +35,10 @@ function* createNewTag() {
   }
 }
 
-function* deleteTag() {
+function* deleteTag({ payload }: ActionType<typeof setDeleteIdTagAction>) {
   try {
-    const deleteTagId: string = yield selectState((s) => s.tagReducer.deleteId);
-
-    yield call(() => deleteTagRequest(deleteTagId));
-    yield put(deleteTagFromPostsAction(deleteTagId));
+    yield call(() => deleteTagRequest(payload));
+    yield put(deleteTagFromPostsAction(payload));
   } catch (e) {
     console.error(e);
     snackActions.error((e as AxiosError).message);
@@ -45,7 +46,7 @@ function* deleteTag() {
 }
 
 export default function* tagSaga() {
-  yield takeEvery(TAG_TYPES.GET_ALL, getAllTags);
-  yield takeEvery(TAG_TYPES.SET_NEW_TAG_NAME, createNewTag);
-  yield takeEvery(TAG_TYPES.SET_DELETE_ID, deleteTag);
+  yield takeEvery(getAllTagsAction, getAllTags);
+  yield takeEvery(setNewTagNameAction, createNewTag);
+  yield takeEvery(setDeleteIdTagAction, deleteTag);
 }

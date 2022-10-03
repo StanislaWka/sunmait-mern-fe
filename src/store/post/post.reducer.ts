@@ -57,13 +57,11 @@ const initialState: PostReducer = {
 
 export const postReducer = createReducer<PostReducer, RootActions>(initialState)
   .handleAction(ACTIONS.getAllPostsAction, (state) => state)
-  .handleAction(ACTIONS.getOnePostAction, (state, { payload }) => ({ ...state, ...payload }))
   .handleAction(ACTIONS.setDeleteIdPostAction, (state, { payload }) => ({
     ...state,
     ...payload,
     posts: state.posts.filter((post) => post._id !== payload.deleteId),
   }))
-  .handleAction(ACTIONS.createPostAction, (state, { payload }) => ({ ...state, ...payload }))
   .handleAction(ACTIONS.setCurrentPostAction, (state, { payload }) => ({ ...state, ...payload }))
   .handleAction(ACTIONS.setAllAction, (state, { payload }) => ({ ...state, posts: payload }))
   .handleAction(ACTIONS.setLoadingAction, (state) => ({ ...state, loading: true }))

@@ -1,22 +1,21 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
+import { ActionType } from 'typesafe-actions';
 import { UserReducer } from 'store/user/user.reducer';
-import TYPES from 'store/user/user.types';
 import { requestLoginUser, requestRegisterUser } from 'api/agents';
 import { snackActions } from 'utils';
 import { setLoadingAction } from 'store/post/post.actions';
 import { AxiosError } from 'axios';
-import { selectState } from '../selector';
 import {
   setUserCredentialsAction,
   setUserFailureAction,
   setUserSuccessAction,
+  userLoginAction,
+  userRegistrationAction,
 } from './user.actions';
 
-export function* registrationUser() {
+export function* registrationUser({ payload }: ActionType<typeof userRegistrationAction>) {
+  const { email, password, name, surname } = payload;
   try {
-    const state: UserReducer = yield selectState((s) => s.userReducer);
-    const { email, password, name, surname } = state;
-
     const result: { data: UserReducer } = yield call(requestRegisterUser, {
       email,
       password,
@@ -34,11 +33,9 @@ export function* registrationUser() {
   }
 }
 
-export function* loginUser() {
+export function* loginUser({ payload }: ActionType<typeof userLoginAction>) {
+  const { email, password } = payload;
   try {
-    const state: UserReducer = yield selectState((s) => s.userReducer);
-    const { email, password } = state;
-
     const result: { data: UserReducer } = yield call(requestLoginUser, { email, password });
 
     localStorage.setItem('accessToken', result.data.tokenData.accessToken);
@@ -54,6 +51,6 @@ export function* loginUser() {
 }
 
 export default function* userSaga() {
-  yield takeEvery(TYPES.LOGIN, loginUser);
-  yield takeEvery(TYPES.SET_REGISTRATION_CREDENTIALS, registrationUser);
+  yield takeEvery(userLoginAction, loginUser);
+  yield takeEvery(userRegistrationAction, registrationUser);
 }
