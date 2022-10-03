@@ -7,7 +7,7 @@ import {
 } from 'api/agents/postService';
 import { AxiosError } from 'axios';
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { CurrentPostData, PostState } from 'store/post/post.reducer';
+import { CurrentPostData } from 'store/post/post.reducer';
 import POST_TYPES from 'store/post/post.types';
 import { snackActions } from 'utils';
 
@@ -17,7 +17,6 @@ import {
   setAllAction,
   setCountAction,
   setCurrentPostAction,
-  setNewPostAction,
 } from './post.actions';
 
 function* getAllPosts() {
@@ -72,9 +71,9 @@ function* createPostSaga() {
 
     // eslint-disable-next-line no-underscore-dangle
     const userId: string = yield selectState((s) => s.userReducer._id);
-    const newPost: { data: PostState[] } = yield call(() => createPostRequest({ ...data, userId }));
+    yield call(() => createPostRequest({ ...data, userId }));
 
-    yield put(setNewPostAction(newPost.data[0]));
+    yield getAllPosts();
     yield put(clearCurrentPostACtion());
   } catch (e) {
     console.error(e);
