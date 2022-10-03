@@ -95,4 +95,11 @@ export const postReducer = createReducer<PostReducer, RootActions>(initialState)
   }))
   .handleAction(ACTIONS.setFilterAction, (state, { payload }) => ({ ...state, filter: payload }))
   .handleAction(ACTIONS.setOrderAction, (state, { payload }) => ({ ...state, order: payload }))
-  .handleAction(ACTIONS.setTagsIdAction, (state, { payload }) => ({ ...state, tagsId: payload }));
+  .handleAction(ACTIONS.setTagsIdAction, (state, { payload }) => ({ ...state, tagsId: payload }))
+  .handleAction(ACTIONS.deleteTagFromPostsAction, (state, { payload }) => ({
+    ...state,
+    posts: state.posts.map((post) => {
+      post.tags = post.tags.filter((tag) => tag._id !== payload);
+      return post;
+    }),
+  }));

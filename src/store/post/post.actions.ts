@@ -56,3 +56,7 @@ export const setUserPostsAction = createAction(
 export const setFilterAction = createAction(POST_TYPES.SET_FILTER, (filter: string) => filter)();
 export const setOrderAction = createAction(POST_TYPES.SET_ORDER, (order: string) => order)();
 export const setTagsIdAction = createAction(POST_TYPES.SET_TAGS_ID, (tagsId: string[]) => tagsId)();
+export const deleteTagFromPostsAction = createAction(
+  POST_TYPES.DELETE_TAG_FROM_POSTS,
+  (tagId: string) => tagId,
+)();

@@ -1,6 +1,7 @@
 import { createNewTagRequest, deleteTagRequest, getAllTagsRequest } from 'api/agents';
 import { AxiosError } from 'axios';
 import { call, put, takeEvery } from 'redux-saga/effects';
+import { deleteTagFromPostsAction } from 'store/post/post.actions';
 import { selectState } from 'store/selector';
 import { snackActions } from 'utils';
 import { addNewTagAction, setAllTagsAction } from './tag.actions';
@@ -36,6 +37,7 @@ function* deleteTag() {
     const deleteTagId: string = yield selectState((s) => s.tagReducer.deleteId);
 
     yield call(() => deleteTagRequest(deleteTagId));
+    yield put(deleteTagFromPostsAction(deleteTagId));
   } catch (e) {
     console.error(e);
     snackActions.error((e as AxiosError).message);
