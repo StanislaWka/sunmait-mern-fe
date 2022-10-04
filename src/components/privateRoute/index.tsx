@@ -20,7 +20,11 @@ export function PrivateRoute({ to }: { to: JSX.Element }) {
 
   if (!isAuth && haveTime) {
     const userData = getUserId();
-    dispatch(setUserIdAction(userData!._id));
+    if (userData?._id) {
+      dispatch(setUserIdAction(userData!._id));
+    } else {
+      return <Navigate to={APP_ROUTES.SIGN_IN} state={{ from: location }} replace />;
+    }
   }
 
   if (!isAuth && !haveTime) {
