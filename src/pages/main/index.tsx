@@ -15,16 +15,19 @@ import { CustomPagination } from './customPagination';
 import { Posts } from './posts';
 import { Tags } from './tags';
 
+const LIMIT = 5;
+
 export function MainPage() {
   const dispatch = useAppDispatch();
   const userId = useSelector(selectUserId);
   const [createPostFrom, setCreatePostForm] = useState(false);
   const [newTag, setNewTag] = useState('');
+  const [page, setPage] = useState(1);
 
   const [tagsId, setTagsId] = useState<string[]>([]);
 
   useEffect(() => {
-    dispatch(getAllPostsAction());
+    dispatch(getAllPostsAction(LIMIT, page));
     dispatch(getAllTagsAction());
   }, []);
 
@@ -76,7 +79,7 @@ export function MainPage() {
         <SearchFilter />
       </Box>
       <Posts posts={posts} />
-      <CustomPagination />
+      <CustomPagination setPage={setPage} page={page} />
     </Container>
   );
 }

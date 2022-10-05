@@ -5,9 +5,6 @@ import { createReducer } from 'typesafe-actions';
 import { UserReducer } from '../user/user.reducer';
 import * as ACTIONS from './post.actions';
 
-const LIMIT = 5;
-const FIRST_PAGE = 1;
-
 export interface PostState {
   _id: string;
   title: string;
@@ -28,31 +25,24 @@ export interface Filter {
 }
 
 interface PostReducer {
-  deleteId: string;
   posts: PostState[];
   currentPost: Partial<CurrentPostData>;
   loading: boolean;
   error?: AxiosError;
   count: number;
-  limit: number;
-  page: number;
-  deleteTagId?: string;
   userId?: string;
   filter?: string;
   order?: string;
   tagsId?: string[];
+  page?: number;
 }
 
 const initialState: PostReducer = {
-  deleteId: '',
   posts: [],
   currentPost: {},
   loading: false,
   error: undefined,
-  limit: LIMIT,
-  page: FIRST_PAGE,
   count: 0,
-  tagsId: [],
 };
 
 export const postReducer = createReducer<PostReducer, RootActions>(initialState)
@@ -72,24 +62,11 @@ export const postReducer = createReducer<PostReducer, RootActions>(initialState)
   }))
   .handleAction(ACTIONS.setLoadingSuccessAction, (state) => ({ ...state, loading: false }))
   .handleAction(ACTIONS.clearCurrentPostACtion, (state) => ({ ...state, currentPost: {} }))
-  .handleAction(ACTIONS.setNewPostAction, (state, { payload }) => {
-    if (state.posts.length === state.limit) {
-      state.posts.splice(state.limit - 1, 1);
-    }
-    return {
-      ...state,
-      posts: [payload, ...state.posts],
-    };
-  })
   .handleAction(ACTIONS.setCountAction, (state, { payload }) => ({ ...state, count: payload }))
   .handleAction(ACTIONS.setPageAction, (state, { payload }) => ({ ...state, page: payload }))
   .handleAction(ACTIONS.deleteTagAction, (state, { payload }) => ({
     ...state,
     deleteTagId: payload,
-  }))
-  .handleAction(ACTIONS.setUserPostsAction, (state, { payload }) => ({
-    ...state,
-    userId: payload,
   }))
   .handleAction(ACTIONS.setFilterAction, (state, { payload }) => ({ ...state, filter: payload }))
   .handleAction(ACTIONS.setOrderAction, (state, { payload }) => ({ ...state, order: payload }))

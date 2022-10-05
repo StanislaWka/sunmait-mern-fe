@@ -13,7 +13,6 @@ import { snackActions } from 'utils';
 
 import { selectState } from '../selector';
 import {
-  clearCurrentPostACtion,
   createPostAction,
   getAllPostsAction,
   getOnePostAction,
@@ -28,19 +27,23 @@ import {
   setUserPostsAction,
 } from './post.actions';
 
-function* getAllPosts() {
+function* getAllPosts({ payload }: ActionType<typeof getAllPostsAction>) {
+  // eslint-disable-next-line prefer-const
+  let { limit = 5, page } = payload;
   try {
-    const limit: number = yield selectState((s) => s.postReducer.limit);
-    const page: number = yield selectState((s) => s.postReducer.page);
+    if (!page) {
+      page = yield selectState((s) => s.postReducer.page);
+    }
     const filter: string = yield selectState((s) => s.postReducer.filter);
     const order: string = yield selectState((s) => s.postReducer.order);
     const tagsId: string[] = yield selectState((s) => s.postReducer.tagsId);
-    const stringTags = tagsId.join(',');
     const posts: { data: any } = yield call(() =>
-      getAllPostsRequest(limit, page, filter, order, stringTags),
+      getAllPostsRequest(limit, page, filter, order, tagsId),
     );
     yield put(setAllAction(posts.data[0].posts));
-    yield put(setCountAction(posts.data[0].totalCount[0].count));
+    if (posts.data[0].posts.length) {
+      yield put(setCountAction(posts.data[0].totalCount[0].count));
+    }
   } catch (e) {
     console.error(e);
     snackActions.error((e as AxiosError).message);
@@ -76,22 +79,16 @@ function* createPostSaga({ payload }: ActionType<typeof createPostAction>) {
     // eslint-disable-next-line no-underscore-dangle
     const userId: string = yield selectState((s) => s.userReducer._id);
     yield call(() => createPostRequest({ ...newPost, userId }));
-
-    yield getAllPosts();
-    yield put(clearCurrentPostACtion());
   } catch (e) {
     console.error(e);
     snackActions.error((e as AxiosError).message);
   }
 }
 
-function* getUserPosts() {
+function* getUserPosts({ payload }: ActionType<typeof setUserPostsAction>) {
+  const { limit, page } = payload;
   try {
-    const limit: number = yield selectState((s) => s.postReducer.limit);
-
-    const page: number = yield selectState((s) => s.postReducer.page);
     const posts: { data: any } = yield call(() => getUserPostsRequest(limit, page));
-    console.log(posts);
     yield put(setAllAction(posts.data[0].posts));
     yield put(setCountAction(posts.data[0].totalCount[0].count));
   } catch (e) {

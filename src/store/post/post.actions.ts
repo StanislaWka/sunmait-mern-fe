@@ -3,7 +3,13 @@ import { createAction } from 'typesafe-actions';
 import { CurrentPostData, PostState } from './post.reducer';
 import POST_TYPES from './post.types';
 
-export const getAllPostsAction = createAction(POST_TYPES.GET_ALL)();
+export const getAllPostsAction = createAction(
+  POST_TYPES.GET_ALL,
+  (limit: number, page: number) => ({
+    limit,
+    page,
+  }),
+)();
 
 export const getOnePostAction = createAction(POST_TYPES.GET_ONE, (id: string) => ({
   currentPost: { _id: id },
@@ -50,7 +56,10 @@ export const clearCurrentPostACtion = createAction(POST_TYPES.CLEAR_CURRENT)();
 
 export const setUserPostsAction = createAction(
   POST_TYPES.SET_USER_POSTS,
-  (userId: string) => userId,
+  (limit: number, page: number) => ({
+    limit,
+    page,
+  }),
 )();
 
 export const setFilterAction = createAction(POST_TYPES.SET_FILTER, (filter: string) => filter)();

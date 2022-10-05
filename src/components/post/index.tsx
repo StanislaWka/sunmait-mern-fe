@@ -1,8 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { Box, IconButton, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { PostState } from 'store/post/post.reducer';
 import React, { useState } from 'react';
-import { UserReducer } from 'store/user/user.reducer';
 import { setDeleteIdPostAction, getOnePostAction } from 'store/post/post.actions';
 import { Tag } from 'components';
 import { CustomButton } from 'components/button';
@@ -13,15 +13,11 @@ import styles from './styles';
 import AlertDialogSlide from './postDialog';
 
 interface Props {
-  _id: string;
-  title: string;
-  text: string;
-  count: number;
-  user: Partial<UserReducer>;
-  tags: { _id: string; name: string; color: string }[];
+  post: PostState;
 }
 
-export function Post({ _id, title, text, count, user, tags }: Props) {
+export function Post({ post }: Props) {
+  const { _id, title, viewsCount, user, tags } = post;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const dispatch = useAppDispatch();
   // eslint-disable-next-line no-underscore-dangle
@@ -42,7 +38,7 @@ export function Post({ _id, title, text, count, user, tags }: Props) {
   const idCompare = userId === user._id;
 
   return (
-    <Box css={styles.mainBox}>
+    <Box css={styles.mainBox} key={_id}>
       <Box
         sx={{
           display: 'flex',
@@ -65,7 +61,7 @@ export function Post({ _id, title, text, count, user, tags }: Props) {
           ))}
       </Box>
       <Box>
-        <Box>Views {count}</Box>
+        <Box>Views {viewsCount}</Box>
         <Box>
           Author: {user.name} {user.surname}
         </Box>

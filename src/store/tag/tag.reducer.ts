@@ -11,13 +11,10 @@ export interface TagData {
 
 export interface TagReducer {
   tags: TagData[];
-  newTagName: string;
-  deleteId?: string;
 }
 
 const initialState: TagReducer = {
   tags: [],
-  newTagName: '',
 };
 
 export const tagReducer = createReducer<TagReducer, RootActions>(initialState)

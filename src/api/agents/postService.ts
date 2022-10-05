@@ -11,10 +11,16 @@ export async function getAllPostsRequest(
   page: number,
   filter?: string,
   order?: string,
-  tagsId?: string,
+  tagsId?: string[],
   // @ts-ignore
 ): AxiosPromise<PostState[]> {
-  return axios.get(POSTS_API_ROUTES.MAIN_GET_ROUTE(limit, page, filter, order, tagsId));
+  if (tagsId?.length) {
+    // @ts-ignore
+    tagsId = tagsId.join(',');
+  }
+  return axios.get(POSTS_API_ROUTES.MAIN_GET_ROUTE(), {
+    params: { limit, page, filter, order, tagsId },
+  });
 }
 
 export async function getUserPostsRequest(
@@ -43,6 +49,7 @@ export async function createPostRequest(data: {
   title: string;
   text: string;
   userId: string;
+  tags: string[];
   // @ts-ignore
 }): AxiosPromise<MessageResponse> {
   return axios.post(POSTS_API_ROUTES.MAIN_ROUTE, data);
