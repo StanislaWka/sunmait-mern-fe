@@ -55,7 +55,7 @@ export function Tag({
   const selectedStyle = isSelected ? styles.selectedStyle : null;
 
   return (
-    <Box css={[styles.tagStyle, selectedStyle]} sx={{ border: `3px solid ${color}` }}>
+    <Box css={[styles.tagStyle, selectedStyle]} sx={{ border: `3px solid ${color}` }} key={_id}>
       <Typography onClick={handleClickFilter} sx={{ color, cursor: 'pointer' }}>
         {name}
       </Typography>

@@ -11,6 +11,7 @@ export function Router() {
       <Route path={APP_ROUTES.SIGN_IN} element={<SignInPage />} />
       <Route path={APP_ROUTES.SIGN_UP} element={<SignUpPage />} />
       <Route path={APP_ROUTES.MY_POSTS} element={<PrivateRoute to={<MyPosts />} />} />
+      <Route path="*" element={<PrivateRoute to={<MainPage />} />} />
     </Routes>
   );
 }

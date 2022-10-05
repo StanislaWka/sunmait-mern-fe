@@ -13,8 +13,7 @@ export const USERS_API_ROUTES = {
 export const POSTS_ROUTE = '/posts';
 
 export const POSTS_API_ROUTES = {
-  MAIN_GET_ROUTE: (limit: number, page: number, filter = '', order = '', tags = '') =>
-    `${POSTS_ROUTE}/?limit=${limit}&page=${page}&filter=${filter}&order=${order}&tags=${tags}`,
+  MAIN_GET_ROUTE: () => `${POSTS_ROUTE}/`,
   MAIN_ROUTE: `${POSTS_ROUTE}/`,
   GET_USER_POSTS_ID: (limit: number, page: number) =>
     `${POSTS_ROUTE}/user?limit=${limit}&page=${page}`,

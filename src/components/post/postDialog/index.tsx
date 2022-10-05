@@ -7,8 +7,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-import { useAppDispatch } from 'hooks';
-import POST_TYPES from 'store/post/post.types';
 import { useSelector } from 'react-redux';
 import { selectCurrentPost } from 'store/post/post.selectors';
 
@@ -27,9 +25,7 @@ const Transition = React.forwardRef(function Transition(
 });
 
 export default function AlertDialogSlide({ open, setOpen }: Props) {
-  const dispatch = useAppDispatch();
   const handleClose = () => {
-    dispatch({ type: POST_TYPES.GET_ALL, payload: {} });
     setOpen(false);
   };
 
