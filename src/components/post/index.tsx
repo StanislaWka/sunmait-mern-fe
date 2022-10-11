@@ -1,36 +1,36 @@
 /** @jsxImportSource @emotion/react */
 import { Box, IconButton, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { PostState } from 'store/post/post.reducer';
 import React, { useState } from 'react';
-import { UserState } from 'store/reducers/userReducer';
-import { deletePost, getOnePost } from 'store/reducers/postReducer/actions';
+import { setDeleteIdPostAction, getOnePostAction } from 'store/post/post.actions';
+import { Tag } from 'components';
 import { CustomButton } from 'components/button';
-import { useAppDispatch, useAppSelector } from 'hooks';
+import { useAppDispatch } from 'hooks';
+import { useSelector } from 'react-redux';
+import { selectUserId } from 'store/user/user.selectors';
 import styles from './styles';
 import AlertDialogSlide from './postDialog';
 
 interface Props {
-  _id: string;
-  title: string;
-  text: string;
-  count: number;
-  user: Partial<UserState>;
-  tags: string[];
+  post: PostState;
 }
 
-export function Post({ _id, title, text, count, user, tags }: Props) {
+export function Post({ post }: Props) {
+  const { _id, title, viewsCount, user, tags } = post;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const dispatch = useAppDispatch();
   // eslint-disable-next-line no-underscore-dangle
-  const userId = useAppSelector((state) => state.userReducer._id);
+  const userId = useSelector(selectUserId);
+
   const [openModal, setOpenModal] = useState(false);
 
   const handleDeletePost = () => {
-    dispatch(deletePost(_id));
+    dispatch(setDeleteIdPostAction(_id));
   };
 
   const handleOpenPost = () => {
-    dispatch(getOnePost(_id));
+    dispatch(getOnePostAction(_id));
     setOpenModal(true);
   };
 
@@ -38,7 +38,7 @@ export function Post({ _id, title, text, count, user, tags }: Props) {
   const idCompare = userId === user._id;
 
   return (
-    <Box css={styles.mainBox}>
+    <Box css={styles.mainBox} key={_id}>
       <Box
         sx={{
           display: 'flex',
@@ -54,13 +54,14 @@ export function Post({ _id, title, text, count, user, tags }: Props) {
           </IconButton>
         )}
       </Box>
-      <ul>
-        {tags.map((tag) => (
-          <li>{tag}</li>
-        ))}
-      </ul>
+      <Box sx={{ marginBottom: '15px', marginTop: '20px', display: 'flex' }}>
+        {!!tags.length &&
+          tags.map((tag) => (
+            <Tag name={tag.name} color={tag.color} _id={tag._id} idCompare={idCompare} />
+          ))}
+      </Box>
       <Box>
-        <Box>Views {count}</Box>
+        <Box>Views {viewsCount}</Box>
         <Box>
           Author: {user.name} {user.surname}
         </Box>

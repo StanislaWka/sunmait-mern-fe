@@ -6,13 +6,15 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
-import { useAppDispatch, useAppSelector, useEnhancedNavigate } from 'hooks';
+import { useAppDispatch, useEnhancedNavigate } from 'hooks';
 import { useLocation } from 'react-router';
 
 import { Input } from 'components';
 import { APP_ROUTES } from 'constants/';
-import { userLogin } from 'store/reducers/userReducer/actions';
+import { userLoginAction } from 'store/user/user.actions';
 import { validationSchema } from 'validators/signIn';
+import { useSelector } from 'react-redux';
+import { selectUserIsAuth } from 'store/user/user.selectors';
 
 import styles from './styles';
 
@@ -41,10 +43,10 @@ export function SignInPage() {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const { scrollNavigate } = useEnhancedNavigate();
-  const isAuth = useAppSelector((s) => s.userReducer.isAuth);
+  const isAuth = useSelector(selectUserIsAuth);
 
   const onSubmit: SubmitHandler<FieldValues> = async (formData): Promise<void> => {
-    dispatch(userLogin(formData));
+    dispatch(userLoginAction(formData as { email: string; password: string }));
   };
 
   useEffect(() => {

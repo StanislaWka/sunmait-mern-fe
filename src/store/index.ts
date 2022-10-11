@@ -1,10 +1,11 @@
 import { applyMiddleware, createStore, combineReducers } from 'redux';
 import createSagaMiddleware from '@redux-saga/core';
-import { userReducer } from './reducers/userReducer';
-import { rootSaga } from './sagas';
-import { postReducer } from './reducers/postReducer';
+import { userReducer } from './user/user.reducer';
+import { rootSaga } from './rootSaga';
+import { postReducer } from './post/post.reducer';
+import { tagReducer } from './tag/tag.reducer';
 
-export const rootReducer = combineReducers({ userReducer, postReducer });
+export const rootReducer = combineReducers({ userReducer, postReducer, tagReducer });
 
 export const saga = createSagaMiddleware();
 

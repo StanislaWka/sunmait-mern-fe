@@ -1,4 +1,4 @@
-import { PostState } from 'store/reducers/postReducer';
+import { PostState } from 'store/post/post.reducer';
 
 export interface PostPatchData extends Omit<PostState, 'user'> {}
 

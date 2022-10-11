@@ -51,7 +51,7 @@ module.exports = {
     'import/extensions': 'off',
     'import/prefer-default-export': 0,
     'no-param-reassign': 'off',
-    ' no-underscore-dangle': 'off',
+    'no-underscore-dangle': 'off',
     'react/jsx-props-no-spreading': 'off',
     'react/require-default-props': 'off',
     'react/no-unknown-property': ['error', { ignore: ['css'] }],
