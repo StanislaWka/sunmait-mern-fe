@@ -26,3 +26,9 @@ export const TAG_API_ROUTES = {
   MAIN_ROUTE: `${TAGS_ROUTE}/`,
   MAIN_ROUTE_ID: (id: string) => `${TAGS_ROUTE}/${id}`,
 };
+
+export const STATISTICS_ROUTES = '/statistic';
+
+export const STAT_API_ROUTE = {
+  MAIN_ROUTE: `${STATISTICS_ROUTES}/`,
+};

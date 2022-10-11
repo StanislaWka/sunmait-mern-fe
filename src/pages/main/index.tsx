@@ -7,9 +7,6 @@ import { useSelector } from 'react-redux';
 import { getAllPostsAction, setTagsIdAction } from 'store/post/post.actions';
 import { selectPosts } from 'store/post/post.selectors';
 import { getAllTagsAction, setNewTagNameAction } from 'store/tag/tag.actions';
-import { setUserIdAction } from 'store/user/user.actions';
-import { selectUserId } from 'store/user/user.selectors';
-import { getUserId } from 'utils';
 import { SearchFilter } from './searchFilter';
 import { CustomPagination } from './customPagination';
 import { Posts } from './posts';
@@ -19,7 +16,6 @@ const LIMIT = 5;
 
 export function MainPage() {
   const dispatch = useAppDispatch();
-  const userId = useSelector(selectUserId);
   const [createPostFrom, setCreatePostForm] = useState(false);
   const [newTag, setNewTag] = useState('');
   const [page, setPage] = useState(1);
@@ -33,13 +29,6 @@ export function MainPage() {
 
   let posts = useSelector(selectPosts);
   posts = posts.filter((post) => post?.user);
-
-  if (!userId) {
-    const userData = getUserId();
-    if (userData && userData._id) {
-      dispatch(setUserIdAction(userData._id));
-    }
-  }
 
   const handleTagChange = (e: any) => {
     setNewTag(e.target.value);

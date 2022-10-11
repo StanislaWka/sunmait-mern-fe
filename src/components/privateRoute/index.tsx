@@ -3,15 +3,15 @@ import { Location, Navigate, useLocation } from 'react-router-dom';
 import { APP_ROUTES } from 'constants/';
 import { getUserId, timeChecker } from 'utils';
 import { useSelector } from 'react-redux';
-import { selectUserIsAuth } from 'store/user/user.selectors';
+import { selectUserIsAuth, selectUserRoleName } from 'store/user/user.selectors';
 import { useAppDispatch } from 'hooks';
-import { setUserIdAction } from 'store/user/user.actions';
+import { setUserIdAndRoleAction } from 'store/user/user.actions';
 
 export type NavigateState = {
   from: Location;
 };
 
-export function PrivateRoute({ to }: { to: JSX.Element }) {
+export function PrivateRoute({ to, roleName }: { to: JSX.Element; roleName?: string }) {
   const isAuth = useSelector(selectUserIsAuth);
   const token = localStorage.getItem('accessToken');
   const haveTime = timeChecker(token || '');
@@ -20,8 +20,12 @@ export function PrivateRoute({ to }: { to: JSX.Element }) {
 
   if (!isAuth && haveTime) {
     const userData = getUserId();
-    if (userData?._id) {
-      dispatch(setUserIdAction(userData!._id));
+    if (userData?._id && userData?.roleId) {
+      dispatch(setUserIdAndRoleAction(userData!._id, userData.roleId));
+      const userRole = useSelector(selectUserRoleName);
+      if (roleName === userRole) {
+        return to;
+      }
     } else {
       return <Navigate to={APP_ROUTES.SIGN_IN} state={{ from: location }} replace />;
     }

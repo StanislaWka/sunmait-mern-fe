@@ -11,6 +11,7 @@ export interface UserReducer {
   loading: boolean;
   isAuth: boolean;
   tokenData: { accessToken: string };
+  roleId: { _id: string; name: string };
 }
 
 const initialState: UserReducer = {
@@ -22,6 +23,7 @@ const initialState: UserReducer = {
   loading: false,
   isAuth: false,
   tokenData: { accessToken: '' },
+  roleId: { _id: '', name: '' },
 };
 
 export const userReducer = createReducer<UserReducer, RootActions>(initialState)
@@ -41,4 +43,4 @@ export const userReducer = createReducer<UserReducer, RootActions>(initialState)
     loading: false,
     isAuth: true,
   }))
-  .handleAction(ACTIONS.setUserIdAction, (state, { payload }) => ({ ...state, _id: payload }));
+  .handleAction(ACTIONS.setUserIdAndRoleAction, (state, { payload }) => ({ ...state, ...payload }));
