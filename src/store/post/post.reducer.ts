@@ -34,6 +34,7 @@ interface PostReducer {
   filter?: string;
   order?: string;
   tagsId?: string[];
+  page?: number;
 }
 
 const initialState: PostReducer = {
