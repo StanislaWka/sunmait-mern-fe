@@ -4,8 +4,14 @@ import { userReducer } from './user/user.reducer';
 import { rootSaga } from './rootSaga';
 import { postReducer } from './post/post.reducer';
 import { tagReducer } from './tag/tag.reducer';
+import { statisticReducer } from './statistic/statistic.reducer';
 
-export const rootReducer = combineReducers({ userReducer, postReducer, tagReducer });
+export const rootReducer = combineReducers({
+  userReducer,
+  postReducer,
+  tagReducer,
+  statisticReducer,
+});
 
 export const saga = createSagaMiddleware();
 

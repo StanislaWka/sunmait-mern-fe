@@ -17,7 +17,13 @@ export const setUserCredentialsAction = createAction(
   (userData: UserReducer) => userData,
 )();
 
-export const setUserIdAction = createAction(USERS_TYPES.SET_USER_ID, (_id: string) => _id)();
+export const setUserIdAndRoleAction = createAction(
+  USERS_TYPES.SET_USER_ID,
+  (_id: string, roleId: { _id: string; name: string }) => ({
+    _id,
+    roleId,
+  }),
+)();
 
 export const setUserFailureAction = createAction(USERS_TYPES.SET_USER_FAILURE)();
 

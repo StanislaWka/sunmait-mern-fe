@@ -63,7 +63,6 @@ export const postReducer = createReducer<PostReducer, RootActions>(initialState)
   .handleAction(ACTIONS.setLoadingSuccessAction, (state) => ({ ...state, loading: false }))
   .handleAction(ACTIONS.clearCurrentPostACtion, (state) => ({ ...state, currentPost: {} }))
   .handleAction(ACTIONS.setCountAction, (state, { payload }) => ({ ...state, count: payload }))
-  .handleAction(ACTIONS.setPageAction, (state, { payload }) => ({ ...state, page: payload }))
   .handleAction(ACTIONS.deleteTagAction, (state, { payload }) => ({
     ...state,
     deleteTagId: payload,

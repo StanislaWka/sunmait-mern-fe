@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, TextField } from '@mui/material';
 import { CustomButton } from 'components';
 import { useAppDispatch } from 'hooks';
@@ -6,7 +6,11 @@ import { setFilterAction, setOrderAction } from 'store/post/post.actions';
 
 const FILTER_MIN_LENGTH = 2;
 
-export function SearchFilter() {
+interface Props {
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export function SearchFilter({ setPage }: Props) {
   const dispatch = useAppDispatch();
   const [filter, setFilter] = useState('');
 
@@ -15,10 +19,14 @@ export function SearchFilter() {
   };
 
   useEffect(() => {
-    if (filter.length > FILTER_MIN_LENGTH || filter === '') dispatch(setFilterAction(filter));
+    if (filter.length > FILTER_MIN_LENGTH || filter === '') {
+      setPage(1);
+      dispatch(setFilterAction(filter));
+    }
   }, [filter]);
 
   const handleClick = (orderType: string) => {
+    setPage(1);
     dispatch(setOrderAction(orderType));
   };
 

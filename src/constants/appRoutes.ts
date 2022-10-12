@@ -3,4 +3,5 @@ export const APP_ROUTES = {
   SIGN_IN: '/sign-in',
   SIGN_UP: '/sign-up',
   MY_POSTS: '/my-posts',
+  STATISTIC: '/statistic',
 };

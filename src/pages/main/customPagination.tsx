@@ -33,6 +33,7 @@ export function CustomPagination({ setPage, page }: Props) {
         justifyContent: 'center',
         marginBottom: '50px',
       }}
+      page={page}
       onChange={handlePagination}
       variant="outlined"
       color="primary"

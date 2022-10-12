@@ -50,7 +50,7 @@ export const deleteTagAction = createAction(POST_TYPES.DELETE_TAG, (id: string) 
 
 export const setCountAction = createAction(POST_TYPES.SET_COUNT, (count: number) => count)();
 
-export const setPageAction = createAction(POST_TYPES.SET_PAGE, (page: number) => page)();
+export const setPageAction = createAction(POST_TYPES.SET_PAGE, (page: number) => ({ page }))();
 
 export const clearCurrentPostACtion = createAction(POST_TYPES.CLEAR_CURRENT)();
 

@@ -29,11 +29,8 @@ import {
 
 function* getAllPosts({ payload }: ActionType<typeof getAllPostsAction>) {
   // eslint-disable-next-line prefer-const
-  let { limit = 5, page } = payload;
+  let { limit = 5, page = 1 } = payload;
   try {
-    if (!page) {
-      page = yield selectState((s) => s.postReducer.page);
-    }
     const filter: string = yield selectState((s) => s.postReducer.filter);
     const order: string = yield selectState((s) => s.postReducer.order);
     const tagsId: string[] = yield selectState((s) => s.postReducer.tagsId);
